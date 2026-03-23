@@ -1,0 +1,30 @@
+// --- ŁADOWANIE SĄSIADA (.GLTF) ---
+        const loader = new GLTFLoader();
+        let sasiadModel = null;
+
+        // Ładujemy plik .gltf - on sam znajdzie plik .bin i tekstury, 
+        // pod warunkiem, że są w tym samym folderze!
+        loader.load('./sasiad.gltf', (gltf) => {
+            sasiadModel = gltf.scene;
+            
+            // Ustawienia pozycji
+            sasiadModel.position.set(0, 0, -8); 
+            sasiadModel.scale.set(1.5, 1.5, 1.5); // Skala 1.5 (możesz zmienić na 1 jeśli jest za duży)
+            
+            // Włączamy cienie dla wszystkich części modelu
+            sasiadModel.traverse(n => { 
+                if (n.isMesh) {
+                    n.castShadow = true; 
+                    n.receiveShadow = true;
+                }
+            });
+            
+            scene.add(sasiadModel);
+            console.log("Sąsiad i jego tekstury załadowane!");
+        }, 
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total * 100) + '% załadowano');
+        },
+        (err) => {
+            console.error("Błąd! Upewnij się, że sasiad.gltf, sasiad.bin i tekstury są w tym samym folderze na GitHub.");
+        });
